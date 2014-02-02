@@ -1,6 +1,6 @@
 Reddit Image Scraper
 ====
-Tool for downloading Imgur content from Reddit
+Tool for downloading Imgur images from Reddit
 
 Usage
 ==

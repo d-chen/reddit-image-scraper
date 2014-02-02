@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import json
 import os
+import re
 import requests
 import sys
 
@@ -41,7 +42,7 @@ def find_imgur_url(json_str):
         url = item["data"]["url"]
         if "imgur.com/" not in url:
             continue
-        elif "i.imgur.com/" in url:
+        elif "i.imgur.com/" in url or str(url).endswith(('.jpeg', '.jpg', '.png', 'gif')):
             url_list.append(str(url))
         elif "imgur.com/a/" in url:
             direct_url_list = get_url_from_album(url)
