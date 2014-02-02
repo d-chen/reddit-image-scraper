@@ -6,11 +6,13 @@ import sys
 
 DOWNLOAD_DIR = "/downloaded"
 
+# Get the subreddit
 def get_reddit_page(subreddit):
     url = "http://www.reddit.com/r/" + subreddit + ".json"
     resp = requests.get(url)
     return resp.text
 
+# Find the '//i.imgur.com/' link(s) from 'imgur.com/a/'
 def get_url_from_album(url):
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text)
@@ -21,8 +23,15 @@ def get_url_from_album(url):
 
     return url_list
 
+# Find the '//i.imgur.com/' link from 'imgur.com/gallery/'
+def get_url_from_gallery(url):
+    resp = requests.get(url)
+    soup = BeautifulSoup(resp.text)
 
+    link = str(soup.find(rel="image_src")["href"])
+    return link
 
+# Parse the subreddit data for imgur links
 def find_imgur_url(json_str):
     url_list = []
     data = json.loads(json_str)
@@ -34,6 +43,9 @@ def find_imgur_url(json_str):
             continue
         elif "i.imgur.com/" in url:
             url_list.append(str(url)) # direct link, no extra handling
+        elif "imgur.com/gallery/" in url:
+            direct_url = get_url_from_gallery(url)
+            #url_list.append(direct_url)
         elif "imgur.com/a/" in url:
             direct_url_list = get_url_from_album(url) # collect all direct links
             url_list = url_list + direct_url_list
