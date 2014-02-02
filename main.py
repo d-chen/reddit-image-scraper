@@ -12,7 +12,7 @@ def get_reddit_page(subreddit):
     resp = requests.get(url)
     return resp.text
 
-# Find the '//i.imgur.com/' link(s) from 'imgur.com/a/'
+# Find the 'i.imgur.com/' link(s) from 'imgur.com/a/'
 def get_url_from_album(url):
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text)
@@ -23,7 +23,7 @@ def get_url_from_album(url):
 
     return url_list
 
-# Find the '//i.imgur.com/' link from 'imgur.com/gallery/'
+# Find the 'i.imgur.com/' link from 'imgur.com/gallery/' or 'imgur.com/'
 def get_url_from_gallery(url):
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text)
@@ -42,13 +42,13 @@ def find_imgur_url(json_str):
         if "imgur.com/" not in url:
             continue
         elif "i.imgur.com/" in url:
-            url_list.append(str(url)) # direct link, no extra handling
-        elif "imgur.com/gallery/" in url:
-            direct_url = get_url_from_gallery(url)
-            #url_list.append(direct_url)
+            url_list.append(str(url))
         elif "imgur.com/a/" in url:
-            direct_url_list = get_url_from_album(url) # collect all direct links
+            direct_url_list = get_url_from_album(url)
             url_list = url_list + direct_url_list
+        else:
+            direct_url = get_url_from_gallery(url)
+            url_list.append(direct_url)
 
     return url_list
 
@@ -66,7 +66,6 @@ def main():
 
     response = get_reddit_page(args[0])
     url_list = find_imgur_url(response)
-    print url_list
 
 
 main()
