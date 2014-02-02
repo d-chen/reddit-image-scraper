@@ -43,13 +43,19 @@ def find_imgur_url(json_str):
         if "imgur.com/" not in url:
             continue
         elif "i.imgur.com/" in url or str(url).endswith(('.jpeg', '.jpg', '.png', 'gif')):
-            url_list.append(str(url))
+            url = str(url)
+            if url.endswith('?1'):
+                url = url[:len(url)-2]
+            url_list.append(url)
+            print url
         elif "imgur.com/a/" in url:
             direct_url_list = get_url_from_album(url)
             url_list = url_list + direct_url_list
+            print direct_url_list
         else:
             direct_url = get_url_from_gallery(url)
             url_list.append(direct_url)
+            print direct_url
 
     return url_list
 
@@ -67,6 +73,5 @@ def main():
 
     response = get_reddit_page(args[0])
     url_list = find_imgur_url(response)
-
 
 main()
