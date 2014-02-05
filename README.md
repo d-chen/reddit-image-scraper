@@ -1,9 +1,9 @@
-Reddit Image Scraper
-====
+#Reddit Image Scraper
+
 Tool for downloading Imgur images from Reddit
 
-Usage
-==
+###Usage
+
 ```
 usage: main.py [-h] [-l LIMIT] [-t {hour,day,week,month,year,all}]
                [--hot | --controversial | --rising | --top]
@@ -26,6 +26,6 @@ optional arguments:
   --top                 Download top posts
 ```
 
-Requirements
-==
+###Requirements
+
 BeautifulSoup, Requests
