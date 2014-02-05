@@ -4,7 +4,8 @@ Tool for downloading Imgur images from Reddit
 
 Usage
 ==
-`usage: main.py [-h] [-l LIMIT] [-t {hour,day,week,month,year,all}]
+```
+usage: main.py [-h] [-l LIMIT] [-t {hour,day,week,month,year,all}]
                [--hot | --controversial | --rising | --top]
                subreddit
 
@@ -22,7 +23,8 @@ optional arguments:
   --hot                 Download hot posts [default]
   --controversial       Download controversial posts
   --rising              Download rising posts
-  --top                 Download top posts`
+  --top                 Download top posts
+```
 
 Requirements
 ==
