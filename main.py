@@ -28,8 +28,10 @@ def get_url_from_album(url):
 
     for link in soup.select('.album-view-image-link a'):
         url = link["href"]
+        
         if not url.startswith("http:"):
             url = "http:" + url
+
         url_list.append(url)
 
     return url_list
