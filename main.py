@@ -1,13 +1,16 @@
-from bs4 import BeautifulSoup, SoupStrainer
 import json
-import os
 import re
 import requests
 import sys
 
-DOWNLOAD_DIR = "/downloaded"
+import url_download
+
+from bs4 import BeautifulSoup, SoupStrainer
 
 # Get the subreddit
+# TODO: add support for extra command line options
+# how many posts? (default=25, max=100)
+# what category? (default=hot, others=new,rising,controversial,top)
 def get_reddit_page(subreddit):
     url = "http://www.reddit.com/r/" + subreddit + ".json"
     resp = requests.get(url)
@@ -30,6 +33,8 @@ def get_url_from_gallery(url):
     soup = BeautifulSoup(resp.text)
 
     link = str(soup.find(rel="image_src")["href"])
+    if link.endswith('?1'):
+        link = link[:len(link)-2]
     return link
 
 # Parse the subreddit data for imgur links
@@ -44,18 +49,18 @@ def find_imgur_url(json_str):
             continue
         elif "i.imgur.com/" in url or str(url).endswith(('.jpeg', '.jpg', '.png', 'gif')):
             url = str(url)
-            if url.endswith('?1'):
+            if url.endswith('?1'): # remove suffix for naming downloaded files later
                 url = url[:len(url)-2]
             url_list.append(url)
-            print url
-        elif "imgur.com/a/" in url:
+            #print url
+        elif "imgur.com/a/" in url and not "#" in url:
             direct_url_list = get_url_from_album(url)
             url_list = url_list + direct_url_list
-            print direct_url_list
+            #print direct_url_list
         else:
             direct_url = get_url_from_gallery(url)
             url_list.append(direct_url)
-            print direct_url
+            #print direct_url
 
     return url_list
 
@@ -73,5 +78,6 @@ def main():
 
     response = get_reddit_page(args[0])
     url_list = find_imgur_url(response)
+    url_download.download_list(args[0], url_list)
 
 main()
