@@ -1,9 +1,9 @@
+import argparse
 import json
-import re
 import requests
 import sys
 
-import url_download
+import file_download
 
 from bs4 import BeautifulSoup, SoupStrainer
 
@@ -69,6 +69,8 @@ def find_imgur_url(json_str):
 def usage():
     print "Usage: python main.py <subreddit-name>"
 
+def 
+
 def main():
     args = sys.argv[1::]
 
@@ -78,6 +80,6 @@ def main():
 
     response = get_reddit_page(args[0])
     url_list = find_imgur_url(response)
-    url_download.download_list(args[0], url_list)
+    file_download.download_list(args[0], url_list)
 
 main()

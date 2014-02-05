@@ -3,6 +3,7 @@ import os
 
 DOWNLOAD_DIR = os.getcwd() + "/downloaded/"
 
+# download every image within url_list to a specific directory
 def download_list(subreddit, url_list):
     file_dir = DOWNLOAD_DIR + subreddit.lower() + "/"
 
@@ -14,7 +15,6 @@ def download_list(subreddit, url_list):
             print "Download halted."
             raise
 
-
     for url in url_list:
         file_name = file_dir + url.split('/')[-1]
 
@@ -25,7 +25,7 @@ def download_list(subreddit, url_list):
             with open(file_name, "ab+") as destination:
                 destination.write(image_file.read())
         else:
-            print file_name +"' already exists."
+            print file_name +" already exists."
 
     print "Download from r/" + subreddit + " complete."
 
