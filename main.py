@@ -8,13 +8,17 @@ import file_download
 from bs4 import BeautifulSoup, SoupStrainer
 
 # Get the subreddit
-# TODO: add support for extra command line options
-# how many posts? (default=25, max=100)
-# what category? (default=hot, others=new,rising,controversial,top)
-def get_reddit_page(subreddit):
-    url = "http://www.reddit.com/r/" + subreddit + ".json"
+def get_reddit_page(subreddit, post_type, limit, time):
+    url =   "http://www.reddit.com/r/" + subreddit + "/" + post_type + \
+            ".json" + "?limit=" + str(limit)
+
+    if post_type == "top" and not time == "hour":
+        url = url + "?sort=top&t=" + time
+
+    print "Retrieving page: " + url
     resp = requests.get(url)
     return resp.text
+
 
 # Find the 'i.imgur.com/' link(s) from 'imgur.com/a/'
 def get_url_from_album(url):
@@ -23,9 +27,13 @@ def get_url_from_album(url):
     url_list = []
 
     for link in soup.select('.album-view-image-link a'):
-        url_list.append(link["href"])
+        url = link["href"]
+        if not url.startswith("http:"):
+            url = "http:" + url
+        url_list.append(url)
 
     return url_list
+
 
 # Find the 'i.imgur.com/' link from 'imgur.com/gallery/' or 'imgur.com/'
 def get_url_from_gallery(url):
@@ -36,6 +44,7 @@ def get_url_from_gallery(url):
     if link.endswith('?1'):
         link = link[:len(link)-2]
     return link
+
 
 # Parse the subreddit data for imgur links
 def find_imgur_url(json_str):
@@ -65,21 +74,33 @@ def find_imgur_url(json_str):
     return url_list
 
 
-
-def usage():
-    print "Usage: python main.py <subreddit-name>"
-
-def 
-
 def main():
-    args = sys.argv[1::]
+    parser = argparse.ArgumentParser(description="Download Imgur images from specified subreddit")
+    parser.add_argument("subreddit", help="subreddit to download from")
 
-    if len(args) != 1:
-        usage()
-        sys.exit()
+    parser.add_argument("-l", "--limit", type=int, default=25, help="maximum number of posts (DEFAULT: 25, MAX: 100)")
+    parser.add_argument("-t", "--time", choices=['hour', 'day', 'week', 'month', 'year', 'all'], default='day', help="time period to check. DEFAULT: day")
 
-    response = get_reddit_page(args[0])
+    type_group = parser.add_mutually_exclusive_group()
+    type_group.add_argument("--hot", action="store_true", help="default: download hot posts")
+    type_group.add_argument("--controversial", action="store_true", help="download controversial posts")
+    type_group.add_argument("--rising", action="store_true", help="download rising posts")
+    type_group.add_argument("--top", action="store_true", help="download top posts")
+
+    args = parser.parse_args()
+    if args.hot:
+        post_type = 'hot'
+    elif args.controversial:
+        post_type = 'controversial'
+    elif args.rising:
+        post_type = 'rising'
+    elif args.top:
+        post_type = 'top'
+    else:
+        post_type = 'hot'
+
+    response = get_reddit_page(args.subreddit, post_type, args.limit, args.time)
     url_list = find_imgur_url(response)
-    file_download.download_list(args[0], url_list)
+    file_download.download_list(args.subreddit, url_list)
 
 main()
