@@ -76,16 +76,16 @@ def find_imgur_url(json_str):
 
 def main():
     parser = argparse.ArgumentParser(description="Download Imgur images from specified subreddit")
-    parser.add_argument("subreddit", help="subreddit to download from")
+    parser.add_argument("subreddit", help="Subreddit to download from")
 
-    parser.add_argument("-l", "--limit", type=int, default=25, help="maximum number of posts (DEFAULT: 25, MAX: 100)")
-    parser.add_argument("-t", "--time", choices=['hour', 'day', 'week', 'month', 'year', 'all'], default='day', help="time period to check. DEFAULT: day")
+    parser.add_argument("-l", "--limit", type=int, default=25, help="Maximum number of posts [default:25 max:100]")
+    parser.add_argument("-t", "--time", choices=['hour', 'day', 'week', 'month', 'year', 'all'], default='day', help="Time period to check [default: day]")
 
     type_group = parser.add_mutually_exclusive_group()
-    type_group.add_argument("--hot", action="store_true", help="default: download hot posts")
-    type_group.add_argument("--controversial", action="store_true", help="download controversial posts")
-    type_group.add_argument("--rising", action="store_true", help="download rising posts")
-    type_group.add_argument("--top", action="store_true", help="download top posts")
+    type_group.add_argument("--hot", action="store_true", help="Download hot posts [default]")
+    type_group.add_argument("--controversial", action="store_true", help="Download controversial posts")
+    type_group.add_argument("--rising", action="store_true", help="Download rising posts")
+    type_group.add_argument("--top", action="store_true", help="Download top posts")
 
     args = parser.parse_args()
     if args.hot:
