@@ -27,5 +27,6 @@ optional arguments:
 ```
 
 ###Requirements
+Install BeautifulSoup, Requests with pip:
 
-BeautifulSoup, Requests
+`pip install -r requirements.txt`
